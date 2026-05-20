@@ -15,9 +15,50 @@ export interface StoryState {
 }
 
 export const detectGender = async (name: string): Promise<'boy' | 'girl' | 'unknown'> => {
+  const norm = name.trim().toLowerCase();
+  
+  // Hand-tuned lists of common Russian names and diminutives
+  const knownBoys = [
+    'никита', 'илья', 'данила', 'саша', 'миша', 'паша', 'леша', 'лоша', 'гриша', 'сережа', 
+    'андрюша', 'ванюша', 'петя', 'ваня', 'дима', 'тема', 'коля', 'юра', 'гена', 
+    'лева', 'вова', 'толя', 'сема', 'рома', 'боря', 'вася', 'женя', 'слава', 
+    'тима', 'федя', 'степа', 'ярик', 'мишаня', 'саня', 'даня', 'алеша', 'антоша',
+    'илюша', 'кирюша', 'павлуша', 'степашка', 'тимурка', 'сенечка', 'федечка',
+    'иван', 'артем', 'артём', 'максим', 'даниил', 'данил', 'кирилл', 'дмитрий',
+    'андрей', 'егор', 'матвей', 'роман', 'ярослав', 'тимофей', 'сергей', 'александр',
+    'арсений', 'григорий', 'михаил', 'владислав', 'леонид', 'игорь', 'владимир'
+  ];
+  
+  const knownGirls = [
+    'маша', 'даша', 'лена', 'оля', 'наташа', 'катя', 'света', 'ира', 'аня', 'соня',
+    'таня', 'юля', 'лиза', 'варя', 'настя', 'ксюша', 'вероника', 'ксюня', 'елена',
+    'мария', 'алиса', 'дарья', 'виктория', 'екатерина', 'софия', 'полина', 'анастасия',
+    'ольга', 'анна', 'юлия', 'татьяна', 'ирина', 'светлана', 'кристина', 'маргарита',
+    'мариша', 'дарьюшка', 'анюта', 'катюша', 'ленуся', 'оленька', 'ирочка'
+  ];
+
+  if (knownBoys.includes(norm)) return "boy";
+  if (knownGirls.includes(norm)) return "girl";
+
+  // Check ending rules for Russian names
+  if (norm.endsWith('а') || norm.endsWith('я')) {
+    // Exception check: some boy names ending with a/я that are not in knownBoys
+    const maleAEndings = ['никита', 'илья', 'данила', 'саша', 'женя', 'ваня', 'петя', 'дима', 'тема', 'коля', 'юра', 'гена', 'лева', 'вова', 'толя', 'сема', 'рома', 'боря', 'вася', 'федя', 'степа'];
+    if (maleAEndings.some(x => norm.includes(x))) {
+      return "boy";
+    }
+    return "girl";
+  }
+
+  const maleEndings = ['н', 'м', 'р', 'л', 'й', 'п', 'т', 'с', 'б', 'в', 'г', 'д', 'ж', 'з', 'к', 'х', 'ц', 'ч', 'ш', 'щ'];
+  const lastChar = norm.charAt(norm.length - 1);
+  if (maleEndings.includes(lastChar) || norm.endsWith('рь') || norm.endsWith('ель')) {
+    return "boy";
+  }
+
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.5-flash",
       contents: `Определи пол ребенка по имени: "${name}". 
       ПРАВИЛА:
       - В русском языке имена на -а, -я (Мария, Елена, Алиса) чаще женские.
@@ -40,7 +81,7 @@ export const detectGender = async (name: string): Promise<'boy' | 'girl' | 'unkn
 export const generateBuklikResponse = async (prompt: string, context: string = "") => {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.5-flash",
       contents: prompt,
       config: {
         systemInstruction: `ТЫ — БУКЛИК, ВОЛШЕБНЫЙ ПОМОЩНИК.
@@ -63,7 +104,10 @@ export const generateBuklikResponse = async (prompt: string, context: string = "
 
 export const generateStoryParagraph = async (state: StoryState, userIdea: string = "", isFinal: boolean = false) => {
   try {
-    const prompt = `Напиши ${isFinal ? 'ПОСЛЕДНИЙ (финальный)' : 'СЛЕДУЮЩИЙ'} абзац волшебной сказки (строго 3-5 предложений).
+    const isBoy = state.gender === 'boy';
+    const isGirl = state.gender === 'girl';
+
+    const prompt = `Напиши ${isFinal ? 'ПОСЛЕДНИЙ (безумно красивый, волшебный и трогательный финальный)' : 'СЛЕДУЮЩИЙ'} абзац сказки.
     
     ОБЯЗАТЕЛЬНЫЕ ГЕРОИ:
     - ГЛАВНЫЙ ГЕРОЙ: ${state.heroName} (это ${state.heroType}).
@@ -75,23 +119,17 @@ export const generateStoryParagraph = async (state: StoryState, userIdea: string
     КОНТЕКСТ СЮЖЕТА:
     - Что уже было: ${state.paragraphs.length > 0 ? state.paragraphs.join(" ") : "Начало сказки."}
     - Последнее событие: ${state.paragraphs.length > 0 ? state.paragraphs[state.paragraphs.length - 1] : "Герои только что встретились."}
-    - Что должно быть дальше: ${userIdea || 'Герои продолжают путь.'}
+    - Что должно быть дальше: ${userIdea || 'Герои продолжают путь по волшебным местам.'}
     
     ПРАВИЛА СТИЛЯ И ГРАММАТИКИ:
-    1. ХУДОЖЕСТВЕННОЕ НАЧАЛО: Если это первый абзац, начни с красивого описания природы или атмосферы (метафоры, эпитеты, волшебная завязка). Не начинай со слов "Жил-был" или "Однажды".
-    2. ГАРМОНИЧНЫЙ ПЕРЕХОД: Новый абзац должен ПЛАВНО и логично вытекать из предыдущего. Используй связующие слова ("И вот тогда...", "Вдруг впереди...", "Продолжив свой путь...").
-    3. РЕГИСТР ИМЕН: ГЕРОЙ (${state.heroName}), ДРУГ (${state.friendName}) и МЕСТО (${state.location}) должны писаться со СТРОЧНОЙ (маленькой) буквы, если они находятся внутри предложения. Используй заглавную букву ТОЛЬКО если это начало предложения. (Например: "маленький котенок пошел...", "в волшебном лесу было тихо..."). 
-    4. МОРАЛЬ И ВОСПИТАНИЕ: Сказка ОБЯЗАТЕЛЬНО должна содержать воспитательный подтекст: учить уважать старших, помогать тем, кто в беде, показывать, что доброта побеждает зло. Сюжет должен иметь смысл и логику.
-    5. ДЛИНА: Абзац должен состоять СТРОГО из 3-5 содержательных предложений. Это важно для того, чтобы текст поместился на страницу.
-    
-    ДОПОЛНИТЕЛЬНО:
-    6. Согласование по родам: герой ${state.gender === 'girl' ? 'девочка/женщина' : 'мальчик/мужчина'} -> используй соответствующие окончания ("пошла", "увидела" vs "пошёл", "увидел").
-    7. ЗАПРЕЩЕНО использовать: "Жил-был", "Жила-была", "Однажды". 
-    8. Пиши на русском языке.
-    ${isFinal ? '9. ОБЯЗАТЕЛЬНО сделай счастливый, законченный и очень красивый ФИНАЛ. Подведи итог морали всей истории.' : '10. Описывай одно значимое событие за раз, не торопись.'}`;
+    1. ЖИВОЙ, МАКСИМАЛЬНО ИНТЕРЕСНЫЙ И ВОЛШЕБНЫЙ ТЕКСТ: Сделай историю по-настоящему красивой, захватывающей и атмосферной! Напиши 1-2 полноценных, приятных абзаца средней длины (примерно 60-100 слов). Пожалуйста, не делай текст слишком коротким или сухим — добавь сказочные детали, дуновение ветра, искры волшебства, шорох листьев или теплое сияние.
+    2. ХУДОЖЕСТВЕННОЕ НАЧАЛО: Если это первый абзац, начни с красивого волшебного описания окружения.
+    3. РЕБЕНОК: Имя ребенка — ${state.childName}. Если в тексте упоминается сам ребенок (или его действия), строго следи за правильными окончаниями глаголов и прилагательных для пола ребенка: ${isBoy ? 'МАЛЬЧИК (он захотел, пошел, увидел, смелый)' : isGirl ? 'ДЕВОЧКА (она захотела, пошла, увидела, смелая)' : 'РЕБЕНОК'}.
+    4. ДРУЖЕЛЮБНОСТЬ: Текст должен легко читаться, предложения делай понятными и певучими.
+    5. НЕ ИСПОЛЬЗУЙ эмодзи или спецсимволы в тексте самой истории.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.5-flash",
       contents: prompt,
     });
     
@@ -99,16 +137,13 @@ export const generateStoryParagraph = async (state: StoryState, userIdea: string
        throw new Error("Empty or too short story paragraph");
     }
     
-    return response.text;
+    return response.text.trim();
   } catch (error) {
     console.error("Story Paragraph Error:", error);
-    return `${state.heroName} и ${state.friendName} вместе отправились навстречу приключениям в ${state.location}!`;
+    return `${state.heroName} и ${state.friendName} вместе отправились навстречу приключениям в ${state.location}! Их ждало много волшебства и веселых событий.`;
   }
 };
 
-/**
- * Generates 3 possible next steps for the story based on current state.
- */
 export async function generateStoryBranches(state: StoryState): Promise<string[]> {
   try {
     const prompt = `
@@ -116,15 +151,15 @@ export async function generateStoryBranches(state: StoryState): Promise<string[]
     ГЕРОЙ: ${state.heroName} (${state.heroType})
     МЕСТО: ${state.location}
     ДРУГ: ${state.friendName}
-    ПОСЛЕДНЕЕ СОБЫТИЕ: ${state.paragraphs[state.paragraphs.length - 1]}
+    ПОСЛЕДНЕЕ СОБЫТИЕ: ${state.paragraphs[state.paragraphs.length - 1] || "Начало истории"}
 
-    Задание: Придумай 3 ОЧЕНЬ КОРОТКИХ варианта (3-5 слов каждый), что может случиться дальше. 
-    Варианты должны быть интересными, логичными и обязательно вести к какому-то доброму уроку.
-    Ответь ТОЛЬКО списком из 3 строк, без смайликов и звездочек.
+    Задание: Придумай 3 ОЧЕНЬ КОРОТКИХ варианта развития сказки (3-5 слов каждый), что может случиться дальше. 
+    Варианты должны быть веселыми, добрыми и логичными.
+    Ответь ТОЛЬКО списком из 3 строк, без нумерации, звездочек или эмодзи. Одна строка — один короткий вариант.
     `;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.5-flash",
       contents: prompt,
     });
 
@@ -235,7 +270,7 @@ const generatePollinationsImage = async (state: StoryState, paragraph: string) =
 export const evaluateReading = async (audioBase64: string, expectedText: string, mimeType: string = "audio/webm") => {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.5-flash",
       contents: [
         {
           inlineData: {
@@ -269,7 +304,7 @@ export const evaluateReading = async (audioBase64: string, expectedText: string,
 export const transcribeAudio = async (audioBase64: string, mimeType: string = "audio/webm"): Promise<string> => {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.5-flash",
       contents: [
         {
           inlineData: {

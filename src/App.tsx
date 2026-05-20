@@ -780,13 +780,12 @@ export default function App() {
                       <ArrowRight className="w-6 h-6 md:w-12 md:h-12" />
                     </button>
                     <button 
-                      onPointerDown={(e) => {
-                        (e.target as HTMLElement).setPointerCapture(e.pointerId);
-                        startRecording();
-                      }}
-                      onPointerUp={(e) => {
-                        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-                        stopRecording();
+                      onClick={() => {
+                        if (isRecording) {
+                          stopRecording();
+                        } else {
+                          startRecording();
+                        }
                       }}
                       className={`w-14 h-14 md:w-28 md:h-28 rounded-full flex items-center justify-center transition-all shadow-lg md:shadow-2xl active:scale-90 touch-none shrink-0 ${isRecording ? 'bg-red-500 animate-pulse ring-4 md:ring-8 ring-red-100' : 'bg-[#A7D0CD] hover:bg-[#8FBCB8] shadow-[0_4px_0_#6E9E9A] md:shadow-[0_10px_0_#6E9E9A] hover:translate-y-[-2px] md:hover:translate-y-[-2px] active:translate-y-[4px] active:shadow-none'}`}
                     >
@@ -836,13 +835,12 @@ export default function App() {
                 <div className="grid md:grid-cols-[1fr_2fr] gap-6 md:gap-8 w-full items-center">
                   <div className="flex flex-col items-center space-y-3 md:space-y-6">
                     <button 
-                      onPointerDown={(e) => {
-                        (e.target as HTMLElement).setPointerCapture(e.pointerId);
-                        startRecording();
-                      }}
-                      onPointerUp={(e) => {
-                        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-                        stopRecording();
+                      onClick={() => {
+                        if (isRecording) {
+                          stopRecording();
+                        } else {
+                          startRecording();
+                        }
                       }}
                       className={`w-20 h-20 md:w-28 md:h-28 rounded-full flex items-center justify-center transition-all shadow-[0_10px_20px_rgba(0,0,0,0.15)] md:shadow-[0_15px_30px_rgba(0,0,0,0.2)] hover:scale-110 active:scale-95 touch-none shrink-0 ${isRecording ? 'bg-red-500 animate-pulse ring-4 md:ring-8 ring-red-100' : 'bg-[#5A5A40] shadow-[0_4px_0_#3A3A25] md:shadow-[0_8px_0_#3A3A25] translate-y-[-2px] md:translate-y-[-4px] active:translate-y-0 active:shadow-none'}`}
                     >
