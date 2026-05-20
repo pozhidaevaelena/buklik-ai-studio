@@ -72,7 +72,7 @@ function BuklikAvatar({ emotion, isProcessing, stage }: { emotion: BuklikEmotion
   const getBuklikMedia = () => {
     const src = getBuklikImage();
     const isVideo = src.toLowerCase().endsWith('.mp4');
-    const borderRadiusClass = stage === 'COMPLETION' ? 'rounded-[120px]' : 'rounded-[70px]';
+    const borderRadiusClass = stage === 'COMPLETION' ? 'rounded-[90px] md:rounded-[120px]' : 'rounded-[40px] md:rounded-[70px]';
     
     if (isVideo) {
       return (
@@ -127,8 +127,8 @@ function BuklikAvatar({ emotion, isProcessing, stage }: { emotion: BuklikEmotion
   };
 
   const containerSizeClass = stage === 'COMPLETION'
-    ? "w-80 h-80 md:w-[420px] md:h-[420px] bg-white/60 p-3 rounded-[130px] border-[12px] border-white shadow-[0_30px_80px_rgba(255,180,0,0.3)] relative overflow-hidden flex items-center justify-center backdrop-blur-sm"
-    : "w-56 h-56 bg-white/60 p-2 rounded-[80px] border-8 border-white shadow-[0_20px_50px_rgba(0,0,0,0.2)] relative overflow-hidden flex items-center justify-center backdrop-blur-sm";
+    ? "w-64 h-64 md:w-[420px] md:h-[420px] bg-white/60 p-3 rounded-[100px] md:rounded-[130px] border-8 md:border-[12px] border-white shadow-[0_30px_80px_rgba(255,180,0,0.3)] relative overflow-hidden flex items-center justify-center backdrop-blur-sm"
+    : "w-40 h-40 md:w-56 md:h-56 bg-white/60 p-2 rounded-[50px] md:rounded-[80px] border-4 md:border-8 border-white shadow-[0_20px_50px_rgba(0,0,0,0.2)] relative overflow-hidden flex items-center justify-center backdrop-blur-sm";
 
   return (
     <motion.div 
@@ -138,14 +138,14 @@ function BuklikAvatar({ emotion, isProcessing, stage }: { emotion: BuklikEmotion
     >
       <div className={containerSizeClass}>
         {getBuklikMedia()}
-        <div className="fallback-icon hidden flex flex-col items-center text-[#5A5A40]">
-          <BookOpen size={stage === 'COMPLETION' ? 180 : 100} />
-          <p className="font-black text-xs mt-2 uppercase">Твой Буклик</p>
+        <div className="fallback-icon hidden flex flex-col items-center text-[#5A5A40] p-4 text-center">
+          <BookOpen className="w-16 h-16 md:w-28 lg:w-40" />
+          <p className="font-black text-[10px] md:text-xs mt-2 uppercase">Твой Буклик</p>
         </div>
         
         {emotion === 'happy' && stage !== 'COMPLETION' && (
-          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-6 right-6 text-red-500 drop-shadow-lg">
-            <Heart fill="currentColor" size={40} />
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-4 right-4 text-red-500 drop-shadow-lg">
+            <Heart fill="currentColor" size={30} className="md:w-10 md:h-10" />
           </motion.div>
         )}
         {emotion === 'excited' && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 bg-yellow-400/20" />}
@@ -155,9 +155,9 @@ function BuklikAvatar({ emotion, isProcessing, stage }: { emotion: BuklikEmotion
         <motion.div 
           animate={{ rotate: 360, scale: [1, 1.2, 1] }}
           transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-10 -right-10 text-yellow-400 opacity-80"
+          className="absolute -top-6 -right-6 md:-top-10 md:-right-10 text-yellow-400 opacity-80"
         >
-          <Sparkles size={80} />
+          <Sparkles className="w-12 h-12 md:w-20 md:h-20" />
         </motion.div>
       )}
 
@@ -661,35 +661,35 @@ export default function App() {
 
 
   return (
-    <div className="min-h-screen font-serif selection:bg-yellow-200 flex items-center justify-center p-4" style={{ background: theme.bg }}>
+    <div className="min-h-screen font-serif selection:bg-yellow-200 flex items-center justify-center p-3 sm:p-4" style={{ background: theme.bg }}>
       <main className="max-w-4xl w-full">
         
         {/* Main Magical Container with Glassmorphism */}
-        <div className="w-full bg-white/40 backdrop-blur-2xl rounded-[80px] border-8 border-white/60 shadow-[0_30px_60px_rgba(92,55,20,0.3)] p-8 md:p-16 relative overflow-hidden">
+        <div className="w-full bg-white/40 backdrop-blur-2xl rounded-[40px] md:rounded-[80px] border-4 md:border-8 border-white/60 shadow-[0_30px_60px_rgba(92,55,20,0.3)] p-4 sm:p-8 md:p-16 relative overflow-hidden">
           
           {/* Top Info Bar */}
-          <div className="flex justify-between items-center mb-12">
+          <div className="flex justify-between items-center mb-6 md:mb-12 gap-2">
             <div className="flex flex-col items-center">
               <button 
                 onClick={() => {
                   setVoiceEnabled(!voiceEnabled);
                   if (!voiceEnabled) handleSpeak("Голос включен!");
                 }}
-                className={`px-6 py-3 rounded-full text-xs font-black transition-all flex items-center gap-2 border-2 shadow-lg ${voiceEnabled ? 'bg-[#FFE0B5] border-[#FFCF9A] text-[#3F2B1C]' : 'bg-white/50 border-white/80 text-gray-500'}`}
+                className={`px-4 py-2 md:px-6 md:py-3 rounded-full text-[10px] md:text-xs font-black transition-all flex items-center gap-1.5 md:gap-2 border-2 shadow-lg ${voiceEnabled ? 'bg-[#FFE0B5] border-[#FFCF9A] text-[#3F2B1C]' : 'bg-white/50 border-white/80 text-gray-500'}`}
               >
-                <Volume2 size={20} />
+                <Volume2 className="w-4 h-4 md:w-5 md:h-5" />
                 {voiceEnabled ? 'ГОЛОС: ДА' : 'ГОЛОС: НЕТ'}
               </button>
-              <p className="text-[10px] font-bold text-[#A65629]/60 mt-1 uppercase tracking-tighter">
+              <p className="text-[8px] md:text-[10px] font-bold text-[#A65629]/60 mt-1 uppercase tracking-tighter">
                 {isProcessing ? 'Буклик думает...' : (voiceEnabled ? 'Буклик говорит' : 'Буклик молчит')}
               </p>
             </div>
-            <div className="text-center bg-white/50 px-8 py-2 rounded-full border-2 border-white/80 shadow-sm">
-              <h1 className="text-2xl md:text-4xl font-black text-[#A65629] tracking-tighter flex items-center gap-2 drop-shadow-sm">
+            <div className="text-center bg-white/50 px-4 py-1.5 md:px-8 md:py-2 rounded-full border-2 border-white/80 shadow-sm">
+              <h1 className="text-lg md:text-4xl font-black text-[#A65629] tracking-tighter flex items-center gap-2 drop-shadow-sm">
                 БУКЛИК
               </h1>
             </div>
-            <div className="w-24 md:w-32" />
+            <div className="w-12 sm:w-24 md:w-32 hidden xs:block" />
           </div>
 
           <AnimatePresence mode="wait">
@@ -699,20 +699,20 @@ export default function App() {
                 initial={{ opacity: 0, scale: 0.9 }} 
                 animate={{ opacity: 1, scale: 1 }} 
                 exit={{ opacity: 0, y: -50 }} 
-                className="flex flex-col items-center space-y-12 py-6"
+                className="flex flex-col items-center space-y-6 md:space-y-12 py-2 md:py-6"
               >
                 <BuklikAvatar emotion={emotion} isProcessing={isProcessing} stage={stage} />
-                <div className="text-center space-y-8 max-w-2xl px-4">
-                   <div className="bg-[#FFF5E0]/80 p-8 md:p-10 rounded-[50px] border-4 border-[#FFCF9A] shadow-xl relative backdrop-blur-sm">
-                      <p className="text-2xl md:text-3xl text-[#8B4513] font-black leading-tight italic">
+                <div className="text-center space-y-4 md:space-y-8 max-w-2xl px-2">
+                   <div className="bg-[#FFF5E0]/80 p-5 md:p-10 rounded-[30px] md:rounded-[50px] border-2 md:border-4 border-[#FFCF9A] shadow-xl relative backdrop-blur-sm">
+                      <p className="text-base sm:text-2xl md:text-3xl text-[#8B4513] font-black leading-tight italic">
                         «Привет, дружок! Я твой волшебный друг Буклик. Давай вместе напишем сказку и нарисуем красивые картинки!»
                       </p>
                       <motion.div 
                         animate={{ y: [0, -5, 0] }} 
                         transition={{ duration: 2, repeat: Infinity }}
-                        className="absolute -bottom-6 -right-6"
+                        className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6"
                       >
-                         <Star size={48} fill="#F9D77E" className="text-[#F9D77E] drop-shadow-lg" />
+                         <Star className="w-8 h-8 md:w-12 md:h-12 text-[#F9D77E]" fill="#F9D77E" />
                       </motion.div>
                    </div>
                 </div>
@@ -722,9 +722,9 @@ export default function App() {
                     setEmotion('happy');
                     setBuklikText("Привет! Давай знакомиться. Как тебя зовут?");
                   }}
-                  className="px-16 py-8 bg-[#FFB27F] text-white text-3xl font-black rounded-full shadow-[0_12px_0_#A65629] hover:translate-y-2 hover:shadow-[0_6px_0_#A65629] transition-all active:scale-95 group relative overflow-hidden"
+                  className="px-8 py-4 md:px-16 md:py-8 bg-[#FFB27F] text-white text-xl sm:text-2xl md:text-3xl font-black rounded-full shadow-[0_6px_0_#A65629] md:shadow-[0_12px_0_#A65629] hover:translate-y-1 hover:shadow-[0_3px_0_#A65629] md:hover:translate-y-2 md:hover:shadow-[0_6px_0_#A65629] transition-all active:scale-95 group relative overflow-hidden"
                 >
-                  <span className="flex items-center gap-4 relative z-10">
+                  <span className="flex items-center gap-2 md:gap-4 relative z-10">
                     НАЧНЁМ СКАЗКУ!
                   </span>
                   <motion.div 
@@ -738,46 +738,46 @@ export default function App() {
             )}
 
             {(['NAME', 'GENDER', 'HERO', 'LOCATION', 'FRIEND', 'CHOOSE_NEXT'].includes(stage)) && (
-              <motion.div key="q" initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col items-center space-y-12">
+              <motion.div key="q" initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col items-center space-y-6 md:space-y-12">
                 <BuklikAvatar emotion={emotion} isProcessing={isProcessing} stage={stage} />
-                <div className="bg-white/80 p-8 md:p-10 rounded-[40px] border-4 border-[#FFCF9A] shadow-lg text-2xl md:text-3xl font-black text-[#A65629] text-center w-full max-w-2xl leading-relaxed relative flex flex-col items-center gap-4">
+                <div className="bg-white/80 p-5 md:p-10 rounded-[30px] md:rounded-[40px] border-2 md:border-4 border-[#FFCF9A] shadow-lg text-lg sm:text-2xl md:text-3xl font-black text-[#A65629] text-center w-full max-w-2xl leading-relaxed relative flex flex-col items-center gap-3">
                   <span>{buklikText}</span>
                   <button 
                     onClick={() => handleSpeak(buklikText)}
-                    className="p-2 bg-[#FFCF9A] rounded-full hover:bg-[#FFB27F] transition-colors"
+                    className="p-1.5 md:p-2 bg-[#FFCF9A] rounded-full hover:bg-[#FFB27F] transition-colors"
                     title="Повторить"
                   >
-                    <Volume2 size={24} />
+                    <Volume2 className="w-5 h-5 md:w-6 md:h-6" />
                   </button>
                 </div>
                 
-                <div className="w-full max-w-2xl space-y-10">
-                  <div className="flex flex-wrap gap-4 justify-center">
+                <div className="w-full max-w-2xl space-y-6 md:space-y-10">
+                  <div className="flex flex-wrap gap-2 md:gap-4 justify-center">
                     {suggestions.map(s => (
                       <button 
                         key={s} 
                         onClick={() => handleStep(s)} 
-                        className="px-10 py-5 bg-[#FFF0D9] border-4 border-[#FFB27F] rounded-full font-black text-xl hover:bg-[#FFB27F] hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-xl"
+                        className="px-5 py-2.5 md:px-10 md:py-5 bg-[#FFF0D9] border-2 md:border-4 border-[#FFB27F] rounded-full font-black text-xs sm:text-sm md:text-xl hover:bg-[#FFB27F] hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-md md:shadow-xl"
                       >
                         {s}
                       </button>
                     ))}
                   </div>
 
-                  <div className="flex gap-4 items-center">
+                  <div className="flex gap-2.5 md:gap-4 items-center w-full pb-4">
                     <input 
                       type="text" 
                       value={inputText}
                       onChange={(e) => setInputText(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && handleStep(inputText)}
                       placeholder="Напиши здесь..." 
-                      className="flex-grow p-7 rounded-full border-4 border-[#FFCF9A] focus:border-[#FFB27F] outline-none text-2xl font-bold shadow-2xl bg-white/90"
+                      className="flex-grow p-4 md:p-7 rounded-full border-2 md:border-4 border-[#FFCF9A] focus:border-[#FFB27F] outline-none text-base sm:text-lg md:text-2xl font-bold shadow-lg md:shadow-2xl bg-white/90 min-w-0"
                     />
                     <button 
                       onClick={() => handleStep(inputText)}
-                      className="w-28 h-28 bg-[#FFB27F] text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all"
+                      className="w-14 h-14 md:w-28 md:h-28 bg-[#FFB27F] text-white rounded-full flex items-center justify-center shadow-lg md:shadow-2xl hover:scale-105 active:scale-95 transition-all shrink-0"
                     >
-                      <ArrowRight size={48} />
+                      <ArrowRight className="w-6 h-6 md:w-12 md:h-12" />
                     </button>
                     <button 
                       onPointerDown={(e) => {
@@ -788,9 +788,9 @@ export default function App() {
                         (e.target as HTMLElement).releasePointerCapture(e.pointerId);
                         stopRecording();
                       }}
-                      className={`w-28 h-28 rounded-full flex items-center justify-center transition-all shadow-2xl active:scale-90 touch-none ${isRecording ? 'bg-red-500 animate-pulse ring-8 ring-red-100' : 'bg-[#A7D0CD] hover:bg-[#8FBCB8] shadow-[0_10px_0_#6E9E9A] hover:translate-y-[-2px] active:translate-y-[4px] active:shadow-none'}`}
+                      className={`w-14 h-14 md:w-28 md:h-28 rounded-full flex items-center justify-center transition-all shadow-lg md:shadow-2xl active:scale-90 touch-none shrink-0 ${isRecording ? 'bg-red-500 animate-pulse ring-4 md:ring-8 ring-red-100' : 'bg-[#A7D0CD] hover:bg-[#8FBCB8] shadow-[0_4px_0_#6E9E9A] md:shadow-[0_10px_0_#6E9E9A] hover:translate-y-[-2px] md:hover:translate-y-[-2px] active:translate-y-[4px] active:shadow-none'}`}
                     >
-                      {isRecording ? <MicOff size={48} className="text-white" /> : <Mic size={48} className="text-white" />}
+                      {isRecording ? <MicOff className="w-6 h-6 md:w-12 md:h-12 text-white" /> : <Mic className="w-6 h-6 md:w-12 md:h-12 text-white" />}
                     </button>
                   </div>
                   
@@ -798,7 +798,7 @@ export default function App() {
                     <motion.p 
                       animate={{ opacity: [0.4, 1, 0.4] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
-                      className="text-center font-black text-red-500 text-2xl tracking-widest uppercase"
+                      className="text-center font-black text-red-500 text-sm sm:text-lg md:text-2xl tracking-widest uppercase"
                     >
                       Я тебя слушаю...
                     </motion.p>
@@ -808,33 +808,33 @@ export default function App() {
             )}
 
             {stage === 'STORY_TIME' && (
-              <motion.div key="story" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center space-y-12">
+              <motion.div key="story" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center space-y-6 md:space-y-12">
                 <BuklikAvatar emotion={emotion} isProcessing={isProcessing} stage={stage} />
                 
-                <div className="p-8 md:p-12 rounded-[50px] border-8 shadow-2xl relative w-full group backdrop-blur-md" style={{ backgroundColor: `${theme.paper}E6`, borderColor: theme.border }}>
+                <div className="p-5 md:p-12 rounded-[30px] md:rounded-[50px] border-4 md:border-8 shadow-2xl relative w-full group backdrop-blur-md" style={{ backgroundColor: `${theme.paper}E6`, borderColor: theme.border }}>
                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity">
-                      <Music size={40} />
+                      <Music className="w-6 h-6 md:w-10 md:h-10" />
                    </div>
-                   <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-white px-8 py-3 rounded-2xl font-black text-2xl shadow-xl z-20 whitespace-nowrap uppercase tracking-widest" style={{ backgroundColor: theme.accent }}>
+                   <div className="absolute -top-4 md:-top-6 left-1/2 -translate-x-1/2 text-white px-4 py-2 md:px-8 md:py-3 rounded-xl md:rounded-2xl font-black text-sm sm:text-2xl shadow-xl z-20 whitespace-nowrap uppercase tracking-widest" style={{ backgroundColor: theme.accent }}>
                     Читай вслух
                   </div>
-          <p className="text-xl md:text-2xl font-black leading-relaxed text-[#5C3714] tracking-wide text-center drop-shadow-sm pt-4 px-4">
-            {storyState.paragraphs[storyState.currentParagraphIndex]}
-          </p>
+                  <p className="text-base sm:text-xl md:text-2xl font-black leading-relaxed text-[#5C3714] tracking-wide text-center drop-shadow-sm pt-4 px-2 md:px-4">
+                    {storyState.paragraphs[storyState.currentParagraphIndex]}
+                  </p>
                   <div className="flex justify-center mt-4">
                     <button 
                       onClick={() => handleSpeak(storyState.paragraphs[storyState.currentParagraphIndex])}
-                      className="p-3 rounded-full text-white shadow-lg transition-transform hover:scale-110 active:scale-95"
+                      className="p-2 sm:p-3 rounded-full text-white shadow-lg transition-transform hover:scale-110 active:scale-95"
                       style={{ backgroundColor: theme.accent }}
                       title="Прослушать еще раз"
                     >
-                      <Volume2 size={24} />
+                      <Volume2 className="w-5 h-5 md:w-6 md:h-6" />
                     </button>
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-[1fr_2fr] gap-8 w-full items-center">
-                  <div className="flex flex-col items-center space-y-6">
+                <div className="grid md:grid-cols-[1fr_2fr] gap-6 md:gap-8 w-full items-center">
+                  <div className="flex flex-col items-center space-y-3 md:space-y-6">
                     <button 
                       onPointerDown={(e) => {
                         (e.target as HTMLElement).setPointerCapture(e.pointerId);
@@ -844,33 +844,33 @@ export default function App() {
                         (e.target as HTMLElement).releasePointerCapture(e.pointerId);
                         stopRecording();
                       }}
-                      className={`w-28 h-28 rounded-full flex items-center justify-center transition-all shadow-[0_15px_30px_rgba(0,0,0,0.2)] hover:scale-110 active:scale-95 touch-none ${isRecording ? 'bg-red-500 animate-pulse ring-8 ring-red-100' : 'bg-[#5A5A40] shadow-[0_8px_0_#3A3A25] translate-y-[-4px] active:translate-y-0 active:shadow-none'}`}
+                      className={`w-20 h-20 md:w-28 md:h-28 rounded-full flex items-center justify-center transition-all shadow-[0_10px_20px_rgba(0,0,0,0.15)] md:shadow-[0_15px_30px_rgba(0,0,0,0.2)] hover:scale-110 active:scale-95 touch-none shrink-0 ${isRecording ? 'bg-red-500 animate-pulse ring-4 md:ring-8 ring-red-100' : 'bg-[#5A5A40] shadow-[0_4px_0_#3A3A25] md:shadow-[0_8px_0_#3A3A25] translate-y-[-2px] md:translate-y-[-4px] active:translate-y-0 active:shadow-none'}`}
                     >
-                      {isRecording ? <MicOff size={48} className="text-white" /> : <Mic size={48} className="text-white" />}
+                      {isRecording ? <MicOff className="w-8 h-8 md:w-12 md:h-12 text-white" /> : <Mic className="w-8 h-8 md:w-12 md:h-12 text-white" />}
                     </button>
-                    <div className="text-center bg-white/80 px-6 py-3 rounded-[30px] border-4 border-white shadow-lg">
-                      <p className="text-sm font-black text-[#5A5A40] uppercase tracking-wider">{isRecording ? "Я слушаю!" : "Жми и читай"}</p>
+                    <div className="text-center bg-white/80 px-4 py-2 md:px-6 md:py-3 rounded-[20px] md:rounded-[30px] border-2 md:border-4 border-white shadow-lg">
+                      <p className="text-[10px] md:text-sm font-black text-[#5A5A40] uppercase tracking-wider">{isRecording ? "Я слушаю!" : "Жми и читай"}</p>
                     </div>
                   </div>
 
-                  <div className="aspect-[4/3] bg-white/60 p-3 rounded-[60px] border-8 border-white flex items-center justify-center overflow-hidden relative shadow-2xl backdrop-blur-sm w-full">
+                  <div className="aspect-[4/3] bg-white/60 p-2 md:p-3 rounded-[30px] md:rounded-[60px] border-4 md:border-8 border-white flex items-center justify-center overflow-hidden relative shadow-2xl backdrop-blur-sm w-full">
                     {currentImage ? (
-                      <motion.img initial={{ opacity: 0 }} animate={{ opacity: 1 }} src={currentImage} className="w-full h-full object-cover rounded-[50px]" referrerPolicy="no-referrer" />
+                      <motion.img initial={{ opacity: 0 }} animate={{ opacity: 1 }} src={currentImage} className="w-full h-full object-cover rounded-[20px] md:rounded-[50px]" referrerPolicy="no-referrer" />
                     ) : (
-                      <div className="text-center p-8 space-y-6 opacity-30">
-                        <Camera size={64} className="mx-auto text-yellow-500" />
-                        <p className="text-lg font-black leading-tight max-w-[200px] mx-auto uppercase text-[#5C3714]">Тут появится твоя картинка!</p>
+                      <div className="text-center p-4 md:p-8 space-y-3 md:space-y-6 opacity-30">
+                        <Camera className="mx-auto text-yellow-500 w-10 h-10 md:w-16 md:h-16" />
+                        <p className="text-xs sm:text-lg font-black leading-tight max-w-[200px] mx-auto uppercase text-[#5C3714]">Тут появится твоя картинка!</p>
                       </div>
                     )}
                     {isReadingCorrectly === true && (
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-6 right-6 bg-green-500 rounded-full p-4 shadow-xl">
-                        <CheckCircle2 size={40} className="text-white" />
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-3 right-3 md:top-6 md:right-6 bg-green-500 rounded-full p-2 md:p-4 shadow-xl">
+                        <CheckCircle2 className="text-white w-6 h-6 md:w-10 md:h-10" />
                       </motion.div>
                     )}
                     {isReadingCorrectly === false && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 bg-red-500/10 flex items-center justify-center">
-                        <motion.div className="bg-white/90 px-6 py-4 rounded-2xl shadow-xl border-4 border-red-400">
-                          <p className="text-xl font-black text-red-600">ПОПРОБУЙ ЕЩЁ!</p>
+                        <motion.div className="bg-white/90 px-4 py-2 md:px-6 md:py-4 rounded-xl md:rounded-2xl shadow-xl border-2 md:border-4 border-red-400">
+                          <p className="text-sm md:text-xl font-black text-red-600">ПОПРОБУЙ ЕЩЁ!</p>
                         </motion.div>
                       </motion.div>
                     )}
@@ -880,48 +880,48 @@ export default function App() {
             )}
 
             {stage === 'COMPLETION' && (
-              <motion.div key="done" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center space-y-12 py-10">
+              <motion.div key="done" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center space-y-6 md:space-y-12 py-4 md:py-10">
                 <div className="relative">
                   <BuklikAvatar emotion={emotion} isProcessing={isProcessing} stage={stage} />
                   {/* Magical Sparkles, Stars and Hearts positioned beautifully around the large Buklik */}
                   <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-                    <Sparkles className="absolute -top-12 -right-12 text-yellow-400 drop-shadow-2xl animate-pulse" size={120} />
-                    <motion.div animate={{ scale: [1, 1.25, 1] }} transition={{ duration: 1.5, repeat: Infinity }} className="absolute -bottom-8 -left-8">
-                      <Heart className="text-red-400 drop-shadow-2xl" size={100} fill="currentColor" />
+                    <Sparkles className="absolute -top-6 -right-6 md:-top-12 md:-right-12 text-yellow-400 drop-shadow-2xl animate-pulse w-14 h-14 md:w-32 md:h-32" size={120} />
+                    <motion.div animate={{ scale: [1, 1.25, 1] }} transition={{ duration: 1.5, repeat: Infinity }} className="absolute -bottom-4 -left-4">
+                      <Heart className="text-red-400 drop-shadow-2xl w-12 h-12 md:w-24 md:h-24" size={100} fill="currentColor" />
                     </motion.div>
-                    <motion.div animate={{ y: [0, -15, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute -top-16 -left-10 text-yellow-300">
-                      <Star size={72} fill="currentColor" className="drop-shadow-lg" />
+                    <motion.div animate={{ y: [0, -15, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute -top-10 -left-6 text-yellow-300">
+                      <Star className="w-10 h-10 md:w-16 md:h-16 drop-shadow-lg" size={72} fill="currentColor" />
                     </motion.div>
                   </div>
                 </div>
                 
-                <div className="text-center space-y-8 px-4">
-                  <h2 className="text-6xl md:text-8xl font-black text-[#A65629] drop-shadow-2xl uppercase tracking-tighter">ТЫ СУПЕР!</h2>
-                  <div className="bg-white/90 px-12 py-10 rounded-[60px] shadow-2xl border-6 border-white/80 max-w-2xl backdrop-blur-md">
-                    <p className="text-3xl md:text-4xl font-black text-[#3F2B1C] leading-snug">
+                <div className="text-center space-y-4 md:space-y-8 px-4">
+                  <h2 className="text-4xl sm:text-6xl md:text-8xl font-black text-[#A65629] drop-shadow-2xl uppercase tracking-tighter">ТЫ СУПЕР!</h2>
+                  <div className="bg-white/90 px-6 py-5 md:px-12 md:py-10 rounded-[30px] md:rounded-[60px] shadow-2xl border-4 md:border-6 border-white/80 max-w-2xl backdrop-blur-md">
+                    <p className="text-lg sm:text-3xl md:text-4xl font-black text-[#3F2B1C] leading-snug">
                       У нас получилась самая чудесная сказка! Ты — настоящий писатель, {storyState.childName}!
                     </p>
                   </div>
                 </div>
 
                 {/* Story Preview */}
-                <div className="w-full max-w-3xl space-y-8 p-6 bg-white/40 rounded-[50px] border-4 border-white">
+                <div className="w-full max-w-3xl space-y-4 md:space-y-8 p-3 sm:p-6 bg-white/40 rounded-[30px] md:rounded-[50px] border-2 md:border-4 border-white">
                   {history.map((item, idx) => (
-                    <div key={idx} className="flex flex-col gap-6 p-6 bg-white/60 rounded-[40px] border-2 border-white">
-                      <p className="text-2xl font-bold text-[#5C3714] leading-relaxed">{item.paragraph}</p>
+                    <div key={idx} className="flex flex-col gap-4 p-4 md:p-6 bg-white/60 rounded-[20px] md:rounded-[40px] border border-white">
+                      <p className="text-base sm:text-2xl font-bold text-[#5C3714] leading-relaxed">{item.paragraph}</p>
                       {item.imageUrl && (
-                        <img src={item.imageUrl} className="w-full rounded-[30px] shadow-lg" alt={`Paragraph ${idx + 1}`} />
+                        <img src={item.imageUrl} className="w-full rounded-[20px] md:rounded-[30px] shadow-lg" alt={`Paragraph ${idx + 1}`} referrerPolicy="no-referrer" />
                       )}
                     </div>
                   ))}
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-10 w-full max-w-3xl">
-                  <button onClick={downloadBook} className="flex-1 px-12 py-10 bg-[#D9B8C4] rounded-[50px] border-8 border-[#FFB27F] font-black text-3xl shadow-[0_15px_0_#A65629] flex items-center gap-6 justify-center hover:bg-[#C9A8B4] transition-all transform hover:translate-y-2 hover:shadow-[0_8px_0_#A65629] active:translate-y-4 active:shadow-none">
-                    <Download size={48} /> КНИГА
+                <div className="flex flex-col sm:flex-row gap-4 md:gap-10 w-full max-w-3xl px-4 animate-bounce-short">
+                  <button onClick={downloadBook} className="flex-1 px-6 py-4 md:px-12 md:py-10 bg-[#D9B8C4] rounded-[24px] md:rounded-[50px] border-4 md:border-8 border-[#FFB27F] font-black text-xl md:text-3xl shadow-[0_6px_0_#A65629] md:shadow-[0_15px_0_#A65629] flex items-center gap-3 md:gap-6 justify-center hover:bg-[#C9A8B4] transition-all transform hover:translate-y-1 md:hover:translate-y-2 hover:shadow-[0_3px_0_#A65629] md:hover:shadow-[0_8px_0_#A65629] active:translate-y-2 active:shadow-none">
+                    <Download className="w-6 h-6 md:w-12 md:h-12" /> КНИГА
                   </button>
-                  <button onClick={() => window.location.reload()} className="flex-1 px-12 py-10 bg-white border-8 border-[#5A5A40] rounded-[50px] font-black text-3xl shadow-[0_15px_0_#3A3A25] flex items-center gap-6 justify-center hover:bg-gray-50 transition-all transform hover:translate-y-2 hover:shadow-[0_8px_0_#3A3A25] active:translate-y-4 active:shadow-none">
-                    <RefreshCcw size={48} /> EЩЁ!
+                  <button onClick={() => window.location.reload()} className="flex-1 px-6 py-4 md:px-12 md:py-10 bg-white border-4 md:border-8 border-[#5A5A40] rounded-[24px] md:rounded-[50px] font-black text-xl md:text-3xl shadow-[0_6px_0_#3A3A25] md:shadow-[0_15px_0_#3A3A25] flex items-center gap-3 md:gap-6 justify-center hover:bg-gray-50 transition-all transform hover:translate-y-1 md:hover:translate-y-2 hover:shadow-[0_3px_0_#3A3A25] md:hover:shadow-[0_8px_0_#3A3A25] active:translate-y-2 active:shadow-none">
+                    <RefreshCcw className="w-6 h-6 md:w-12 md:h-12" /> EЩЁ!
                   </button>
                 </div>
               </motion.div>
@@ -936,7 +936,7 @@ export default function App() {
                 initial={{ opacity: 0 }} 
                 animate={{ opacity: 1 }} 
                 exit={{ opacity: 0 }} 
-                className="absolute inset-0 bg-gradient-to-br from-[#FFDEE9] via-[#E4E9FF] to-[#DBF9FF] z-[200] flex flex-col items-center justify-center rounded-[80px] border-[12px] border-white/60 overflow-hidden shadow-inner"
+                className="absolute inset-0 bg-gradient-to-br from-[#FFDEE9] via-[#E4E9FF] to-[#DBF9FF] z-[200] flex flex-col items-center justify-center rounded-[40px] md:rounded-[80px] border-4 md:border-[12px] border-white/60 overflow-hidden shadow-inner"
               >
                 {/* Magical Background Particles */}
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -964,20 +964,20 @@ export default function App() {
                 </div>
 
                 <div className="relative z-10 flex flex-col items-center">
-                  <div className="relative mb-6">
+                  <div className="relative mb-6 flex justify-center">
                     <BuklikAvatar emotion={emotion} isProcessing={isProcessing} stage={stage} />
                     <div className="absolute -top-4 -right-4 text-yellow-400 drop-shadow-lg animate-bounce z-25">
-                      <Sparkles size={56} fill="currentColor" />
+                      <Sparkles className="w-10 h-10 md:w-14 md:h-14" fill="currentColor" />
                     </div>
                   </div>
                   <motion.p 
                     animate={{ scale: [1, 1.02, 1], y: [0, -2, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="mt-6 text-2xl md:text-3xl lg:text-4xl font-black text-[#5C3714] tracking-tight text-center px-8 max-w-2xl drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)] font-serif italic leading-relaxed"
+                    className="mt-4 text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black text-[#5C3714] tracking-tight text-center px-4 md:px-8 max-w-2xl drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)] font-serif italic leading-relaxed"
                   >
                     {buklikText.length < 120 ? buklikText : 'БУКЛИК КОЛДУЕТ...'}
                   </motion.p>
-                  <p className="mt-6 text-xl text-[#8B4513] font-bold tracking-[0.1em] uppercase opacity-70">Творим волшебство специально для тебя... ✨</p>
+                  <p className="mt-4 text-xs sm:text-xl text-[#8B4513] font-bold tracking-[0.1em] uppercase opacity-70 px-4 text-center">Творим волшебство специально для тебя... ✨</p>
                 </div>
               </motion.div>
             )}
@@ -986,15 +986,15 @@ export default function App() {
 
         <audio ref={audioPlayerRef} className="hidden" />
 
-        <footer className="mt-16 text-center text-white/90 font-black space-y-8 w-full pb-12">
-          <div className="flex justify-center gap-12">
-            <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }}><Cloud size={64} className="drop-shadow-lg" /></motion.div>
-            <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}><Sun size={64} className="text-yellow-400 drop-shadow-lg" /></motion.div>
-            <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }}><Heart size={64} className="text-red-400 drop-shadow-lg" fill="currentColor" /></motion.div>
+        <footer className="mt-8 md:mt-16 text-center text-white/90 font-black space-y-4 md:space-y-8 w-full pb-8 md:pb-12">
+          <div className="flex justify-center gap-6 md:gap-12">
+            <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }}><Cloud className="w-10 h-10 md:w-16 md:h-16 drop-shadow-lg" /></motion.div>
+            <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}><Sun className="w-10 h-10 md:w-16 md:h-16 text-yellow-400 drop-shadow-lg" /></motion.div>
+            <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }}><Heart className="w-10 h-10 md:w-16 md:h-16 text-red-400 drop-shadow-lg" fill="currentColor" /></motion.div>
           </div>
-          <div className="space-y-4">
-            <p className="text-lg tracking-[0.3em] uppercase opacity-70">Волшебный мир для маленьких создателей книг</p>
-            <div className="h-2 w-48 bg-white/40 mx-auto rounded-full shadow-inner" />
+          <div className="space-y-2 md:space-y-4 px-4">
+            <p className="text-xs sm:text-lg tracking-[0.2em] md:tracking-[0.3em] uppercase opacity-70">Волшебный мир для маленьких создателей книг</p>
+            <div className="h-1.5 md:h-2 w-32 md:w-48 bg-white/40 mx-auto rounded-full shadow-inner" />
           </div>
         </footer>
       </main>
